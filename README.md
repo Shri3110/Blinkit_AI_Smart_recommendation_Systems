@@ -48,3 +48,5 @@ An AI-powered recommendation prototype that encourages Blinkit users to explore 
    - Send the cart and the user's past purchase history to Groq.
    - Groq will analyze the intent, find an unexplored category, and pick a single product.
    - You'll see a personalized, AI-generated explanation for why the product was recommended!
+
+*Deployment trigger note updated.*
