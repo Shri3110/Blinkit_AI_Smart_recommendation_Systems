@@ -28,17 +28,17 @@ An AI-powered recommendation prototype that encourages Blinkit users to explore 
    ```
    The backend will run on `http://localhost:8000`.
 
-## 2. Frontend Setup (React + Vite)
+## 2. Frontend Setup (Next.js)
 
 1. Open a second terminal and navigate to the frontend directory:
    ```bash
    cd "c:\Blinkit MVP\frontend"
    ```
-2. Start the Vite development server:
+2. Start the Next.js development server:
    ```bash
    npm run dev
    ```
-3. Open the URL provided by Vite in your browser (usually `http://localhost:5173`).
+3. Open the URL provided by Next.js in your browser (usually `http://localhost:3000`).
 
 ## 3. How to Test the MVP
 1. When you load the frontend, you'll see a simulated "Cart" for a specific user.
@@ -48,5 +48,20 @@ An AI-powered recommendation prototype that encourages Blinkit users to explore 
    - Send the cart and the user's past purchase history to Groq.
    - Groq will analyze the intent, find an unexplored category, and pick a single product.
    - You'll see a personalized, AI-generated explanation for why the product was recommended!
+
+## 4. Deployment Guide
+
+Because this repository contains two separate applications (`backend/` and `frontend/`), you need to deploy them as two separate services and specify their respective root directories.
+
+### Backend Deployment (Railway)
+1. Create a new service from the GitHub repository on Railway.
+2. **CRITICAL:** Go to Settings -> Build -> **Root Directory** and set it to `/backend`.
+3. Ensure the `PORT` environment variable is set or leave default.
+4. Add your `GROQ_API_KEY` to the environment variables.
+
+### Frontend Deployment (Vercel or Railway)
+1. Create a new Next.js project pointing to the GitHub repository.
+2. **CRITICAL:** Set the **Root Directory** to `/frontend`.
+3. Add a new environment variable (e.g. `NEXT_PUBLIC_API_URL`) to point to your deployed backend URL so the frontend can communicate with the backend.
 
 *Deployment trigger note updated.*
