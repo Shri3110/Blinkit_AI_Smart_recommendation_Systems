@@ -1,0 +1,55 @@
+Problem Statement: Blinkit Smart Discovery
+
+Project Overview
+
+Build an AI-native MVP called Blinkit Smart Discovery that helps Blinkit
+users discover products from new categories through personalized,
+context-aware recommendations during checkout.
+
+Background
+
+Research from public user feedback (Play Store, Reddit, forums) and user
+surveys indicates: - Users repeatedly purchase the same categories. -
+Shopping is highly mission-driven. - Users rarely browse unfamiliar
+categories. - Personalized, explainable recommendations improve trust. -
+One relevant recommendation is more effective than many generic
+suggestions.
+
+Business Goal
+
+Increase the percentage of Monthly Active Customers (MACs) who purchase
+from at least one new product category every month.
+
+MVP Objective
+
+Develop an AI-powered feature that: - Understands shopping intent. -
+Detects repetitive buying patterns. - Identifies unexplored
+categories. - Recommends one relevant product from a new category. -
+Explains why the recommendation is relevant. - Lets users Add to Cart or
+Skip.
+
+Data Sources
+
+1.  Real Blinkit Product Catalog (public product information)
+2.  Synthetic Customer Profiles
+3.  Synthetic Purchase History
+4.  Synthetic Current Cart
+
+AI Workflow
+
+1.  Load product catalog.
+2.  Retrieve customer profile.
+3.  Analyze purchase history.
+4.  Analyze current cart.
+5.  Detect shopping intent.
+6.  Calculate exploration score.
+7.  Recommend one new category.
+8.  Recommend one product.
+9.  Generate a personalized explanation.
+10. Display the recommendation during checkout.
+
+Deliverable
+
+A production-ready prototype demonstrating how AI can increase
+cross-category purchases through personalized, explainable
+recommendations integrated into the Blinkit shopping experience.

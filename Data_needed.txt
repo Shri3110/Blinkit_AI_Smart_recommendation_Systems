@@ -1,0 +1,218 @@
+I am building an AI-native Product Management MVP called "Blinkit Smart Discovery."
+
+The objective is to build a realistic AI-powered recommendation system that encourages Blinkit users to purchase products from new categories.
+
+Generate four interconnected JSON datasets that together simulate the backend data required for the recommendation engine.
+
+The datasets must maintain referential integrity, meaning all relationships between products, users, carts, and orders must be valid.
+
+The generated data should be realistic, production-like, and immediately usable in a React + FastAPI application.
+
+==========================================================
+DATASET 1
+product_catalog.json
+==========================================================
+
+Source:
+Use publicly available Blinkit product information wherever possible.
+
+Generate approximately 2,000 products.
+
+Each product should contain:
+
+{
+  "id":"",
+  "sku":"",
+  "name":"",
+  "brand":"",
+  "category":"",
+  "subcategory":"",
+  "variant":"",
+  "size":"",
+  "unit":"",
+  "mrp":0,
+  "selling_price":0,
+  "discount_percentage":0,
+  "rating":0,
+  "review_count":0,
+  "availability":true,
+  "stock_status":"",
+  "bestseller":false,
+  "new_arrival":false,
+  "trending":false,
+  "seasonality":"",
+  "diet_type":"",
+  "lifestyle_tags":[],
+  "cross_sell_categories":[],
+  "frequently_bought_with":[],
+  "image_url":"",
+  "product_url":""
+}
+
+Requirements
+
+• Around 25 categories
+• Around 100 subcategories
+• Real Indian FMCG brands
+• Multiple pack sizes
+• Multiple variants
+• Realistic Indian pricing
+• Realistic ratings
+• Realistic discounts
+
+==========================================================
+DATASET 2
+customer_profiles.json
+==========================================================
+
+Generate approximately 1,000 customers.
+
+Each customer should contain
+
+{
+  "user_id":"",
+  "name":"",
+  "age":0,
+  "gender":"",
+  "city":"",
+  "occupation":"",
+  "household_type":"",
+  "monthly_income":"",
+  "shopping_frequency":"",
+  "preferred_categories":[],
+  "preferred_brands":[],
+  "budget_level":"",
+  "shopping_motivation":"",
+  "discovery_behavior":"",
+  "discount_sensitivity":0,
+  "trust_score":0,
+  "exploration_score":0,
+  "loyalty_score":0,
+  "average_order_value":0,
+  "average_order_frequency":0,
+  "preferred_delivery_slot":"",
+  "created_at":""
+}
+
+Include realistic personas such as
+
+• Students
+• Working Professionals
+• Families
+• Parents
+• Pet Owners
+• Fitness Enthusiasts
+• Budget Shoppers
+• Premium Shoppers
+• Senior Citizens
+
+==========================================================
+DATASET 3
+purchase_history.json
+==========================================================
+
+Generate approximately 20,000 purchase records.
+
+Each purchase MUST reference
+
+• an existing user_id
+• an existing product_id
+
+Structure
+
+{
+  "order_id":"",
+  "user_id":"",
+  "order_date":"",
+  "order_time":"",
+  "product_id":"",
+  "quantity":0,
+  "price_paid":0,
+  "discount_received":0,
+  "payment_method":"",
+  "delivery_time":"",
+  "category":"",
+  "subcategory":"",
+  "shopping_mission":"",
+  "repeat_purchase":true,
+  "order_value":0
+}
+
+Generate realistic shopping patterns such as
+
+• Weekly groceries
+• Daily milk purchases
+• Monthly household refills
+• Festival shopping
+• Health-conscious buying
+• Pet care purchases
+• Baby care purchases
+• Impulse snack purchases
+
+==========================================================
+DATASET 4
+current_cart.json
+==========================================================
+
+Generate one active cart for every customer.
+
+Structure
+
+{
+  "cart_id":"",
+  "user_id":"",
+  "cart_items":[],
+  "cart_value":0,
+  "time_of_day":"",
+  "day_of_week":"",
+  "shopping_mission":"",
+  "recommended_category":"",
+  "recommended_product":"",
+  "recommendation_reason":"",
+  "user_action":"",
+  "checkout_status":""
+}
+
+Each cart should contain between 2 and 10 products.
+
+The recommendation must
+
+• Recommend a product from a category the customer rarely or never purchases.
+• Be based on purchase history.
+• Use only products from product_catalog.json.
+
+Generate natural-language recommendation reasons such as
+
+"You frequently purchase breakfast essentials. Customers with similar shopping habits also enjoy Protein Granola."
+
+"You regularly buy pet food. Similar shoppers often purchase pet grooming products."
+
+==========================================================
+DATA CONSISTENCY RULES
+==========================================================
+
+Maintain complete referential integrity.
+
+• Every product referenced must exist in product_catalog.json.
+• Every user referenced must exist in customer_profiles.json.
+• Purchase history must influence recommendations.
+• Recommendations must be explainable.
+• Frequently Bought Together relationships should be meaningful.
+• Cross-category recommendations should feel realistic.
+
+==========================================================
+OUTPUT
+==========================================================
+
+Generate exactly four files:
+
+• product_catalog.json
+• customer_profiles.json
+• purchase_history.json
+• current_cart.json
+
+Output valid UTF-8 formatted JSON.
+
+Pretty-print each JSON file.
+
+Ensure the datasets can be directly imported into PostgreSQL or MongoDB and consumed by a React + FastAPI application without additional preprocessing.

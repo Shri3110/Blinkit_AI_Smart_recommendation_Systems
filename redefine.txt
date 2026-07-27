@@ -1,0 +1,192 @@
+Refine the existing Hybrid Recommendation Engine without changing its architecture or UI.
+
+Keep the current pipeline:
+
+Customer Persona
+→ Purchase History
+→ Current Cart
+→ Candidate Generation
+→ Rule-Based Scoring
+→ Best Product Selection
+→ LLM Explanation
+
+Do NOT redesign the engine. Improve only the business logic.
+
+### 1. Improve Candidate Generation
+
+Replace completely random candidate selection with intelligent candidate generation.
+
+Instead of selecting 15 random products from the catalogue, generate candidate products using:
+
+• Customer Persona
+• Favourite Categories
+• Purchase History
+• Current Cart
+• Cross-category affinity mappings
+
+Example:
+
+Health & Wellness
+→ Hydration
+→ Healthy Snacks
+→ Fresh Produce
+
+Groceries
+→ Snacks
+→ Cooking Oils
+→ Ready-to-Eat
+
+Pet Care
+→ Pet Grooming
+→ Cleaning Essentials
+
+Generate a relevant pool of 15 candidate products before scoring.
+
+--------------------------------------------------
+
+### 2. Replace Random Cart Compatibility
+
+Remove the random +1 to +10 cart compatibility score.
+
+Instead use deterministic product affinity rules.
+
+Examples:
+
+Milk
+→ Cornflakes
+
+Bread
+→ Butter
+
+Protein Powder
+→ Electral
+
+Oats
+→ Dry Fruits
+
+Rice
+→ Pickles
+
+Atta
+→ Cooking Oil
+
+Pet Food
+→ Pet Shampoo
+
+Dog Treats
+→ Pet Toys
+
+Cleaning Liquid
+→ Air Freshener
+
+Assign affinity scores based on these mappings rather than randomness.
+
+--------------------------------------------------
+
+### 3. Replace Random Base Score
+
+Remove the random baseline score.
+
+Instead use a fixed baseline score for all candidates.
+
+Example:
+
+Base Score = 10
+
+This keeps recommendations deterministic and reproducible.
+
+--------------------------------------------------
+
+### 4. Improve Purchase History Scoring
+
+Instead of giving every previously purchased category the same score, weight the score based on purchase frequency.
+
+Example:
+
+Frequently Purchased Category
++8
+
+Occasionally Purchased
++5
+
+Rarely Purchased
++2
+
+--------------------------------------------------
+
+### 5. Strengthen Persona Logic
+
+Instead of relying only on keyword matching, create structured persona preferences.
+
+Each persona should contain:
+
+• Preferred Categories
+• Preferred Product Types
+• Lifestyle Preferences
+• Shopping Intent
+
+Example:
+
+Fitness Enthusiast
+
+Preferred Categories:
+Health & Wellness
+Fresh Produce
+Protein Foods
+
+Avoid:
+Sugary Drinks
+Processed Snacks
+
+Family Shopper
+
+Preferred Categories:
+Groceries
+Baby Care
+Cleaning Essentials
+
+Student
+
+Preferred Categories:
+Instant Food
+Snacks
+Soft Drinks
+
+Pet Owner
+
+Preferred Categories:
+Pet Food
+Pet Grooming
+Cleaning Essentials
+
+Use these structured preferences during scoring.
+
+--------------------------------------------------
+
+### 6. Preserve Existing Business Objective
+
+Continue prioritising unexplored categories.
+
+Category Novelty should remain the strongest scoring factor because the objective of this MVP is to increase cross-category discovery.
+
+Do not recommend products from previously purchased categories unless their overall score is significantly higher than all unexplored category candidates.
+
+--------------------------------------------------
+
+### 7. Preserve Existing Explainability
+
+Continue using the LLM ONLY after the rule engine has selected the winning product.
+
+The LLM should never choose products.
+
+It should only generate a concise 2–3 sentence explanation based on:
+
+• Persona
+• Purchase History
+• Current Cart
+• Selected Product
+• Selected Category
+
+--------------------------------------------------
+
+The final system should remain deterministic, explainable, production-inspired, and closely aligned with Blinkit's business goal of increasing cross-category product discovery.

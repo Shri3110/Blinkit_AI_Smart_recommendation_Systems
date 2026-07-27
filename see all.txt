@@ -1,0 +1,33 @@
+Refine the "Featured Products → See all" behaviour for the MVP.
+
+Current issue:
+The "See all" link is either non-functional or would require a full product catalogue page, which is outside the scope of this MVP.
+
+Instead of leaving a broken or incomplete experience, clicking "See all" should navigate to a simple informational page.
+
+Page Requirements:
+
+Title:
+📦 Product Catalogue
+
+Message:
+This feature is intentionally out of scope for this MVP.
+
+The primary objective of this prototype is to validate Blinkit's AI-powered Smart Discovery recommendation experience during checkout and its ability to encourage cross-category product discovery.
+
+To keep the MVP focused, the following features were intentionally excluded:
+• Complete product catalogue
+• Advanced search
+• Product filters and sorting
+• Category listing pages
+
+These features would be included in a future production-ready version.
+
+UI Requirements:
+- Match Blinkit's visual design (clean white background, rounded cards, subtle colours, consistent typography).
+- Show an informational card in the centre of the page.
+- Include a "← Back to Home" button that returns the user to the homepage.
+- Do not display any errors or placeholder text.
+- Do not implement the full catalogue or additional browsing functionality.
+
+This should feel like an intentional product management decision rather than an unfinished feature.

@@ -1,0 +1,254 @@
+The current application starts directly at the Cart page, which does not accurately demonstrate the complete user journey.
+
+I want to transform this into a realistic Blinkit-inspired shopping application that showcases my AI-powered feature, "Blinkit Smart Discovery," in its natural context.
+
+The objective is NOT to recreate the entire Blinkit application but to build a polished MVP that demonstrates how AI can increase cross-category purchases.
+
+=========================================================
+PROJECT GOAL
+=========================================================
+
+Build a complete end-to-end shopping experience where users naturally discover the AI recommendation during checkout.
+
+The Smart Discovery recommendation should be the centerpiece of the application.
+
+=========================================================
+APPLICATION FLOW
+=========================================================
+
+The application should contain the following screens in order:
+
+1. Splash Screen
+   • Blinkit branding
+   • Simple loading animation
+
+↓
+
+2. Home Screen
+   • Search bar
+   • Product categories
+   • Featured products
+   • Best sellers
+   • Recently bought section (optional)
+
+↓
+
+3. Category Page
+   • Display products by category
+   • Filters
+   • Sorting
+   • Search within category
+
+↓
+
+4. Product Details Page
+   • Product image
+   • Product information
+   • Brand
+   • Price
+   • Discount
+   • Rating
+   • Quantity selector
+   • Add to Cart button
+
+↓
+
+5. Shopping Cart
+   • Selected products
+   • Quantity controls
+   • Cart total
+   • Savings
+   • Proceed to Checkout
+
+↓
+
+6. ⭐ AI Smart Discovery (Core MVP)
+
+This is the most important screen.
+
+When the user clicks "Proceed to Checkout", the backend should:
+
+• Analyze purchase history
+• Analyze current cart
+• Identify shopping intent
+• Calculate exploration score
+• Detect categories the user has never explored
+• Recommend ONE product from a NEW category
+
+Display a recommendation card like:
+
+------------------------------------------------
+
+✨ Smart Discovery
+
+Recommended for You
+
+Product Image
+
+Product Name
+
+Brand
+
+Price
+
+Discount
+
+★★★★☆
+
+NEW CATEGORY
+
+Because you regularly purchase breakfast essentials, customers with similar shopping habits often buy Protein Granola.
+
+Confidence Score
+
+95%
+
+[ Add to Cart ]
+
+[ No Thanks ]
+
+------------------------------------------------
+
+If the user clicks Add to Cart, the product should be added to the shopping cart.
+
+If the user clicks No Thanks, continue to checkout.
+
+=========================================================
+7. Checkout
+=========================================================
+
+Display
+
+Shipping Address
+
+Order Summary
+
+Delivery Time
+
+Payment Method
+
+Order Total
+
+Place Order
+
+=========================================================
+8. Order Confirmation
+=========================================================
+
+Show
+
+Order Success
+
+Products Ordered
+
+Total Amount
+
+Estimated Delivery
+
+If the Smart Discovery recommendation was accepted, highlight:
+
+🎉 Congratulations!
+
+You explored a new category today.
+
+=========================================================
+DATA SOURCES
+=========================================================
+
+Use
+
+• Real Blinkit Product Catalog (public product information)
+
+• Synthetic Customer Profiles
+
+• Synthetic Purchase History
+
+• Synthetic Current Cart
+
+The application should use these datasets dynamically rather than hardcoding data.
+
+=========================================================
+AI RECOMMENDATION ENGINE
+=========================================================
+
+The recommendation engine should:
+
+1. Load customer profile
+
+2. Load purchase history
+
+3. Load current cart
+
+4. Detect shopping mission
+
+5. Calculate exploration score
+
+6. Identify unexplored categories
+
+7. Retrieve products from those categories
+
+8. Ask the LLM to generate:
+
+   • Best recommendation
+
+   • Reason for recommendation
+
+   • Confidence score
+
+9. Return a structured JSON response.
+
+=========================================================
+USER EXPERIENCE
+=========================================================
+
+The UI should resemble Blinkit's design language:
+
+• Yellow accent colors
+• Rounded cards
+• Clean typography
+• Mobile-first responsive layout
+• Minimalistic design
+• Smooth animations
+• Fast transitions
+
+Do not copy Blinkit's proprietary UI exactly; create an inspired design.
+
+=========================================================
+TECH STACK
+=========================================================
+
+Frontend
+
+• React
+• Next.js
+• Tailwind CSS
+
+Backend
+
+• FastAPI
+
+Database
+
+• PostgreSQL
+
+AI
+
+• Groq/OpenAI
+
+Deployment
+
+• Frontend → Vercel
+
+• Backend → Render/Railway
+
+=========================================================
+IMPORTANT
+=========================================================
+
+The current implementation starts directly at the Cart page.
+
+Refactor the application into a complete shopping journey while preserving the existing recommendation engine.
+
+The application should tell a complete product story from browsing to checkout, with Smart Discovery integrated naturally into the user journey.
+
+The Smart Discovery feature should remain the hero feature of the application and clearly demonstrate how AI helps users discover products from categories they have never purchased before.

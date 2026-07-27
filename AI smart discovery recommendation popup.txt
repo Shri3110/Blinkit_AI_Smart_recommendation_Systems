@@ -1,0 +1,197 @@
+Refactor the AI Smart Discovery recommendation popup to make it realistic, explainable, and production-ready.
+
+Do NOT change the recommendation engine, shopping flow, backend logic, or datasets. Only improve the recommendation presentation and explanation.
+
+The popup should contain:
+
+────────────────────────────
+
+✨ SMART DISCOVERY
+
+Recommended for You
+
+[Product Image]
+
+Product Name
+
+Brand
+
+Category: <Category Name> (New Category)
+
+Price
+
+────────────────────────────
+
+Why we recommended this
+
+✓ Based on your recent purchase history
+
+✓ Complements your current cart
+
+✓ New category you haven't explored
+
+✓ Popular among similar customers
+
+────────────────────────────
+
+Reason
+
+Instead of generating completely free-form AI text, use a template-driven explanation populated with dynamic customer data.
+
+Template:
+
+"You usually purchase products from **{Top Categories}**. **{Recommended Product}** complements your current cart and introduces you to the **{New Category}** category, which you haven't explored before. Customers with similar shopping behaviour frequently purchase this product together with similar orders."
+
+Generate the values dynamically from:
+
+• Selected Customer Persona
+
+• Current Cart
+
+• Purchase History
+
+• Favourite Categories
+
+• Previously Purchased Categories
+
+• Product Affinity Rules
+
+• Cross-category buying patterns
+
+The recommendation should ALWAYS:
+
+1. Match the customer's persona.
+
+2. Complement the current cart.
+
+3. Belong to a category the customer has never purchased before.
+
+4. Be a realistic Blinkit product.
+
+5. Be supported by simple rule-based logic before generating the explanation.
+
+The AI explanation should NEVER:
+
+❌ Mention unrelated concepts.
+
+❌ Invent facts.
+
+❌ Give health or lifestyle advice.
+
+❌ Recommend products for illogical reasons.
+
+❌ Produce long ChatGPT-style paragraphs.
+
+Maximum explanation length: 2–3 sentences.
+
+────────────────────────────
+
+Example 1
+
+Persona:
+Family Shopper
+
+Top Categories:
+Atta, Rice & Dal
+
+Current Cart:
+Atta
+Toor Dal
+
+Recommendation:
+Lay's Magic Masala
+
+Reason:
+
+"You usually purchase groceries and monthly essentials. Lay's Magic Masala complements your grocery order and introduces you to the Snacks & Munchies category, which you haven't explored before. Customers with similar shopping behaviour often add snacks to their monthly grocery orders."
+
+────────────────────────────
+
+Example 2
+
+Persona:
+Pet Owner
+
+Recommendation:
+Himalaya Pet Shampoo
+
+Reason:
+
+"You regularly purchase pet essentials. Himalaya Pet Shampoo complements your existing pet care purchases while introducing you to the Pet Grooming category. Customers with similar shopping behaviour frequently purchase grooming products together with pet food."
+
+────────────────────────────
+
+Example 3
+
+Persona:
+Fitness Enthusiast
+
+Recommendation:
+Electral ORS
+
+Reason:
+
+"You usually purchase products from Health & Wellness and Fresh Produce. Electral ORS complements your healthy lifestyle and introduces you to the Hydration category, which you haven't explored before. Customers with similar shopping behaviour frequently add hydration products to similar orders."
+
+────────────────────────────
+
+Display
+
+AI Match Score
+
+Example:
+
+92% Match
+
+Replace "AI Confidence Score" with "AI Match Score".
+
+The match score should be calculated using simple rule-based logic such as:
+
+• Persona match
+
+• Category affinity
+
+• Current cart compatibility
+
+• Purchase history relevance
+
+Do NOT generate a random percentage.
+
+────────────────────────────
+
+Buttons
+
+[No Thanks]      [+ Add to Cart]
+
+────────────────────────────
+
+UI Improvements
+
+• Highlight the "New Category" using a green badge.
+
+• Keep the explanation concise and easy to scan.
+
+• Use bullet points instead of long paragraphs wherever possible.
+
+• Make the product image and product name the visual focus.
+
+• Keep the AI Match Score subtle.
+
+• Follow Blinkit's existing design language.
+
+The final recommendation popup should feel like a real production AI recommendation system—trustworthy, concise, and directly aligned with Blinkit's goal of increasing cross-category purchases rather than a generic LLM chatbot response. 
+
+One final improvement I'd make
+
+Instead of showing only:
+
+AI Match Score: 92%
+
+show a small explanation underneath, for example:
+
+AI Match Score: 92%
+
+Matched because:
+✓ Fits your shopping pattern
+✓ Complements your current cart
+✓ New category for you

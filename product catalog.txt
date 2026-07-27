@@ -1,0 +1,115 @@
+# Replace Synthetic Product Catalog with Real Blinkit Public Catalog
+
+The current product catalog contains unrealistic and fabricated products such as incorrect brand-product combinations (e.g., Britannia Face Wash, Dove Measuring Cups).
+
+Do NOT generate synthetic products.
+
+Instead, rebuild the entire product catalog using ONLY publicly available Blinkit product listings.
+
+## Objective
+
+Create a high-quality product_catalog.json containing real products that are currently or recently available on Blinkit's public platform.
+
+## Data Collection Strategy
+
+Collect product information from Blinkit's publicly accessible product pages and category listings.
+
+If direct crawling is restricted, use publicly indexed Blinkit product pages that are accessible through search engines.
+
+Do not invent products.
+
+Do not invent brands.
+
+Do not invent prices.
+
+If a product cannot be verified from a public source, exclude it.
+
+## Categories
+
+Collect products across at least 20 categories, including:
+
+• Fruits & Vegetables
+• Dairy, Bread & Eggs
+• Atta, Rice & Dal
+• Oil & Ghee
+• Masalas & Spices
+• Breakfast & Instant Food
+• Snacks & Munchies
+• Biscuits & Bakery
+• Chocolates & Desserts
+• Tea & Coffee
+• Cold Drinks & Juices
+• Personal Care
+• Hair Care
+• Skin Care
+• Baby Care
+• Pet Care
+• Cleaning Essentials
+• Home & Kitchen
+• Ice Cream & Frozen Foods
+• Health & Wellness
+• Stationery
+• Electronics & Accessories
+
+## Product Fields
+
+For every product extract:
+
+{
+  "product_id":"",
+  "name":"",
+  "brand":"",
+  "category":"",
+  "subcategory":"",
+  "variant":"",
+  "size":"",
+  "unit":"",
+  "mrp":0,
+  "selling_price":0,
+  "discount_percentage":0,
+  "availability":"",
+  "image_url":"",
+  "product_url":""
+}
+
+## Data Quality Rules
+
+Every product must satisfy all of the following:
+
+✓ Product name matches Blinkit's public listing.
+
+✓ Brand is correct.
+
+✓ Category is correct.
+
+✓ Variant is correct.
+
+✓ Size is correct.
+
+✓ Pricing reflects the public listing.
+
+✓ Image URL points to the actual product image when available.
+
+✓ Product URL points to the public product page when available.
+
+## Validation
+
+Reject any product that appears to be AI-generated or cannot be verified from a public Blinkit listing.
+
+Validate that:
+
+• Britannia products are only food products.
+• Dove products are only personal care products.
+• Reynolds products are stationery products.
+• Bananas are unbranded or sold under the correct produce brand.
+• Brand-product relationships match real FMCG catalogues.
+
+## Output
+
+Generate a clean product_catalog.json containing approximately 500–1000 verified real Blinkit products.
+
+Accuracy is more important than quantity.
+
+The remaining datasets (customer profiles, purchase history, and current carts) should continue to use synthetic data that references these real products.
+
+Do not fabricate any product information.
