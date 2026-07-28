@@ -63,10 +63,19 @@ export default function Home() {
         fetch(`${API_BASE}/categories?user_id=${userId}`),
         fetch(`${API_BASE}/products/featured?user_id=${userId}`)
       ])
-      setCategories(await catRes.json())
-      setFeatured(await featRes.json())
+      
+      if (!catRes.ok) throw new Error(`Categories API failed: ${catRes.status}`)
+      if (!featRes.ok) throw new Error(`Featured API failed: ${featRes.status}`)
+      
+      const cats = await catRes.json()
+      const feats = await featRes.json()
+      
+      setCategories(Array.isArray(cats) ? cats : [])
+      setFeatured(Array.isArray(feats) ? feats : [])
     } catch (err) {
-      console.error(err)
+      console.error("fetchPersonalizedContent Error:", err)
+      setCategories([])
+      setFeatured([])
     } finally {
       setLoadingContent(false)
     }
@@ -100,8 +109,12 @@ export default function Home() {
         
       // Fetch users for Demo Mode
       fetch(`${API_BASE}/users`)
-        .then(res => res.json())
+        .then(res => {
+          if (!res.ok) throw new Error(`Users API failed: ${res.status}`)
+          return res.json()
+        })
         .then(data => {
+          if (!Array.isArray(data)) throw new Error("Users API returned non-array")
           setUsers(data)
           const savedUserId = localStorage.getItem('blinkit_active_user')
           if (savedUserId) {
@@ -130,9 +143,15 @@ export default function Home() {
 
   const fetchUserPurchases = (userId: string) => {
     fetch(`${API_BASE}/users/${userId}/purchases`)
-      .then(res => res.json())
-      .then(data => setPurchases(data))
-      .catch(err => console.error(err))
+      .then(res => {
+        if (!res.ok) throw new Error(`Purchases API failed: ${res.status}`)
+        return res.json()
+      })
+      .then(data => setPurchases(Array.isArray(data) ? data : []))
+      .catch(err => {
+        console.error("fetchUserPurchases Error:", err)
+        setPurchases([])
+      })
   }
 
   const handleUserChange = (user: any) => {

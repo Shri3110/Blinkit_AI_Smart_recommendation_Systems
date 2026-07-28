@@ -1,0 +1,128 @@
+Review and improve the recommendation engine business logic without changing the overall MVP architecture or UI.
+
+Current issues observed:
+
+1. Ensure recommended_category ALWAYS matches the selected product's actual category.
+For example:
+❌ recommended_category = "Dairy, Bread & Eggs"
+Product = Britannia Good Day Butter Biscuits
+Actual category = Biscuits & Bakery
+
+This should never happen.
+
+The backend must always set:
+
+recommended_category = recommended_product.category
+
+instead of calculating them separately.
+
+------------------------------------------------
+
+2. Improve recommendation explanations.
+
+Do not use the same explanation for every user.
+
+Generate explanations based on the user's persona and recommendation reason.
+
+Examples:
+
+Fitness Enthusiast:
+"Based on your healthy shopping habits, this product is a great addition to your regular purchases while helping you explore a new category."
+
+Parent:
+"Parents with similar shopping patterns often purchase this product alongside their regular family essentials."
+
+Working Professional:
+"This product complements your routine purchases and introduces something new without changing your usual shopping behaviour."
+
+Student:
+"This quick and affordable product matches your shopping style while encouraging category exploration."
+
+Premium Shopper:
+"This premium recommendation aligns with your preferences while helping you discover another category."
+
+------------------------------------------------
+
+3. Improve matched_reasons.
+
+Do not always return
+
+- Matches your shopping preferences
+- Helps you discover a new category
+
+Instead generate dynamic reasons such as:
+
+- Matches your healthy lifestyle
+- Complements your breakfast purchases
+- Popular among similar shoppers
+- Frequently bought with your favourite products
+- Fits your shopping routine
+- Introduces a new category
+- High affinity with your purchase history
+- Relevant to your lifestyle
+- Great complementary purchase
+
+Return 2-3 reasons depending on the recommendation.
+
+------------------------------------------------
+
+4. Improve confidence score calculation.
+
+Do not return mostly fixed values like 65 or 80.
+
+Calculate confidence from recommendation signals.
+
+Example:
+
+Persona Match = +30
+Purchase History = +25
+Complementary Category = +20
+Cross-category Novelty = +15
+Product Availability = +10
+
+Total = 100
+
+Return the final confidence score only.
+
+Typical range:
+70–95
+
+------------------------------------------------
+
+5. Validate recommendation consistency before returning the response.
+
+Before returning:
+
+- recommended_category == recommended_product.category
+- recommended_product exists
+- explanation is not empty
+- matched_reasons has at least two reasons
+- confidence_score between 70 and 95
+- is_new_category is correctly determined
+
+------------------------------------------------
+
+6. Improve synthetic product realism.
+
+Avoid unrealistic combinations such as:
+
+Amul Alphonso Mango
+Amul Green Chilli
+
+Brands should logically match products.
+
+If necessary, correct the synthetic catalogue so product-brand combinations appear realistic.
+
+------------------------------------------------
+
+IMPORTANT
+
+Do NOT redesign the application.
+
+Do NOT modify the UI.
+
+Do NOT change any API endpoints.
+
+Do NOT change request/response schema.
+
+Only improve the backend recommendation logic, explanations, confidence calculation, recommendation consistency, and synthetic catalogue quality while keeping the MVP behaviour exactly the same.
