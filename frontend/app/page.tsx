@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Info, ChevronDown, ChevronUp, ShoppingBag } from 'lucide-react'
 
-const API_BASE = 'http://localhost:8000/api'
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'
 
 const CATEGORY_IMAGES: Record<string, string> = {
   'Fruits & Vegetables': 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=400&q=80',

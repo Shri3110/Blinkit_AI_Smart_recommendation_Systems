@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { ArrowLeft, ShoppingBag, MapPin, Clock, CreditCard, Receipt, Trash2 } from 'lucide-react'
 import SmartDiscoveryModal from '@/components/SmartDiscoveryModal'
 
-const API_BASE = 'http://localhost:8000/api'
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'
 
 export default function CartPage() {
   const router = useRouter()

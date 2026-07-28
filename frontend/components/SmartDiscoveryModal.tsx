@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Sparkles, X, Plus } from 'lucide-react'
 
-const API_BASE = 'http://localhost:8000/api'
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'
 
 /* eslint-disable @next/next/no-img-element */
 
