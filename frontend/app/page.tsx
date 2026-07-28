@@ -112,12 +112,19 @@ export default function Home() {
               fetchPersonalizedContent(savedUserId)
             } else if (data.length > 0) {
               handleUserChange(data[0])
+            } else {
+              setLoadingContent(false)
             }
           } else if (data.length > 0) {
             handleUserChange(data[0])
+          } else {
+            setLoadingContent(false)
           }
         })
-        .catch(err => console.error(err))
+        .catch(err => {
+          console.error("Failed to fetch API:", err)
+          setLoadingContent(false)
+        })
     }
   }, [showSplash])
 
