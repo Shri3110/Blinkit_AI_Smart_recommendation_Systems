@@ -10,6 +10,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'
 
 interface Product {
   id: string;
+  product_id?: string;
   name: string;
   brand: string;
   selling_price: number;

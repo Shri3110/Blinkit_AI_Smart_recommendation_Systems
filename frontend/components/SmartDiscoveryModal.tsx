@@ -7,8 +7,18 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'
 
 /* eslint-disable @next/next/no-img-element */
 
+interface Product {
+  id: string;
+  product_id?: string;
+  name: string;
+  brand: string;
+  category: string;
+  selling_price: number;
+  image_url: string;
+}
+
 interface DiscoveryData {
-  recommended_product: Record<string, unknown>;
+  recommended_product: Product;
   explanation: string;
   confidence_score: number;
   matched_reasons?: string[];

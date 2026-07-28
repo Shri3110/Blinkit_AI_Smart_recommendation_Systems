@@ -35,6 +35,7 @@ const CATEGORY_IMAGES: Record<string, string> = {
 
 interface Product {
   id: string;
+  product_id?: string;
   name: string;
   brand: string;
   category: string;
