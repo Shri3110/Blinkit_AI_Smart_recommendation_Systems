@@ -78,6 +78,48 @@ PRODUCT_AFFINITY_MAP = {
 
 SESSION_HISTORY = {} # user_id -> set of recently recommended product IDs
 
+def rank_unexplored_categories(unexplored_categories, profile, category_frequencies, cart_items):
+    scored_cats = []
+    persona_type = profile.get('occupation', '')
+    prefs = PERSONA_PREFERENCES.get(persona_type, {"preferred": [], "avoid": []})
+    
+    exploration_score = profile.get('exploration_score', 5)
+    cart_cat_names = [item.get("category", "") for item in cart_items]
+    
+    for cat in unexplored_categories:
+        score = 0
+        
+        # 1. Persona preference
+        if cat in prefs["preferred"]:
+            score += 40
+        elif cat in prefs["avoid"]:
+            score -= 40
+            
+        # 2. Cart compatibility (heuristic mapping)
+        if "Dairy, Bread & Eggs" in cart_cat_names and cat in ["Breakfast & Instant Food", "Snacks & Munchies"]:
+            score += 20
+        if "Snacks & Munchies" in cart_cat_names and cat in ["Cold Drinks & Juices", "Sweet Tooth"]:
+            score += 20
+        if "Pet Care" in cart_cat_names and cat in ["Cleaning Essentials"]:
+            score += 15
+        if "Baby Care" in cart_cat_names and cat in ["Cleaning Essentials", "Dairy, Bread & Eggs"]:
+            score += 15
+            
+        # 3. Purchase History Affinity
+        # If they buy a lot of fruits/veg, maybe health/wellness is good
+        if "Fruits & Vegetables" in category_frequencies and cat == "Health & Wellness":
+            score += 15
+            
+        # 4. Shopping behaviour / Exploration score
+        # Use exploration_score as a multiplier for some random variance to ensure 
+        # that ties are broken differently and high explorers get more variety
+        score += exploration_score * random.randint(1, 4)
+        
+        scored_cats.append((score, cat))
+        
+    scored_cats.sort(key=lambda x: x[0], reverse=True)
+    return [c[1] for c in scored_cats]
+
 def score_candidate(product, profile, category_frequencies, cart_items, unexplored_categories):
     score = 0
     reasons = set()
@@ -132,9 +174,9 @@ def score_candidate(product, profile, category_frequencies, cart_items, unexplor
         reasons.add("Frequently bought with your favourite products")
         reasons.add("Great complementary purchase")
                 
-    # 4. Cross-category Novelty (+15)
+    # 4. Cross-category Novelty (+10) -> Reduced from +15 so it doesn't overpower persona match
     if cat in unexplored_categories:
-        score += 15
+        score += 10
         reasons.add("Introduces a new category")
         
     # 5. Product Availability (+10) (simulated)
@@ -186,9 +228,14 @@ def get_recommendation(user_id: str):
         unexplored_categories = all_cats # Fallback
 
     # Intelligent Candidate Generation
-    # Pool candidate categories based on Persona + Unexplored
+    ranked_unexplored = rank_unexplored_categories(unexplored_categories, profile, category_frequencies, cart_items)
+    
+    # Pick the top 2-3 highest-ranked unexplored categories
+    top_unexplored = ranked_unexplored[:3]
+    
+    # Pool candidate categories based on Persona + Top Unexplored
     persona_type = profile.get('occupation', '')
-    target_categories = set(unexplored_categories)
+    target_categories = set(top_unexplored)
     if persona_type in PERSONA_PREFERENCES:
         target_categories.update(PERSONA_PREFERENCES[persona_type]["preferred"])
         
@@ -204,7 +251,8 @@ def get_recommendation(user_id: str):
         
     conn.close()
 
-    # We take all targeted products (or up to 50) and score them to pick the very best deterministically
+    # Shuffle before slicing to ensure variety even within the targeted categories
+    random.shuffle(all_targeted_products)
     candidates = all_targeted_products[:50]
     
     scored_candidates = []
