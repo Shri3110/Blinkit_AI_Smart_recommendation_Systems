@@ -250,13 +250,29 @@ async def get_product(product_id: str):
 
 @app.get("/api/users")
 async def get_users():
-    # Return full user details for the frontend
+    # Return full user details for the frontend, dynamically calculating favourite_categories
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT raw_json FROM users LIMIT 20")
+    cursor.execute("SELECT user_id, raw_json FROM users LIMIT 20")
     rows = cursor.fetchall()
+    
+    users_data = []
+    for row in rows:
+        user_data = json.loads(row["raw_json"])
+        user_id = row["user_id"]
+        
+        # Calculate Top Categories from purchase history dynamically
+        cursor.execute("SELECT category FROM purchases WHERE user_id = ?", (user_id,))
+        purchases = cursor.fetchall()
+        from collections import Counter
+        cat_counts = Counter([p["category"] for p in purchases])
+        top_cats = [cat for cat, count in cat_counts.most_common(3)]
+        
+        user_data["favourite_categories"] = top_cats
+        users_data.append(user_data)
+        
     conn.close()
-    return [json.loads(row["raw_json"]) for row in rows]
+    return users_data
 
 @app.get("/api/users/{user_id}/purchases")
 async def get_user_purchases(user_id: str):

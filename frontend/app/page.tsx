@@ -156,6 +156,9 @@ export default function Home() {
 
   const handleUserChange = (user: any) => {
     setActiveUser(user)
+    setPurchases([])
+    setCategories([])
+    setFeatured([])
     localStorage.setItem('blinkit_active_user', user.user_id)
     window.dispatchEvent(new Event('personaChanged'))
     fetchUserPurchases(user.user_id)
