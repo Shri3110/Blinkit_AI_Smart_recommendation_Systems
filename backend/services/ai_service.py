@@ -42,25 +42,37 @@ def get_all_categories():
 from collections import Counter
 
 PERSONA_PREFERENCES = {
-    "Fitness Enthusiasts": {
+    "Fitness Enthusiast": {
         "preferred": ["Health & Wellness", "Fruits & Vegetables", "Meat & Seafood", "Dairy, Bread & Eggs"],
         "avoid": ["Snacks & Munchies", "Cold Drinks & Juices", "Sweet Tooth"]
     },
-    "Students": {
+    "Student": {
         "preferred": ["Snacks & Munchies", "Cold Drinks & Juices", "Instant Food", "Breakfast & Instant Food"],
         "avoid": ["Baby Care", "Meat & Seafood", "Pet Care"]
     },
-    "Families": {
+    "Family Shopper": {
         "preferred": ["Dairy, Bread & Eggs", "Cleaning Essentials", "Home & Kitchen", "Atta, Rice & Dal", "Personal Care"],
         "avoid": []
     },
-    "Parents": {
+    "Parent": {
         "preferred": ["Baby Care", "Dairy, Bread & Eggs", "Cleaning Essentials", "Home & Kitchen"],
         "avoid": []
     },
-    "Pet Owners": {
+    "Pet Owner": {
         "preferred": ["Pet Care", "Cleaning Essentials", "Home & Kitchen"],
         "avoid": []
+    },
+    "Premium Shopper": {
+        "preferred": ["Personal Care", "Tea & Coffee", "Chocolates & Desserts", "Breakfast & Instant Food"],
+        "avoid": ["Instant Food"]
+    },
+    "Budget Shopper": {
+        "preferred": ["Atta, Rice & Dal", "Dairy, Bread & Eggs", "Fruits & Vegetables"],
+        "avoid": ["Premium", "Imported"]
+    },
+    "Working Professional": {
+        "preferred": ["Breakfast & Instant Food", "Tea & Coffee", "Personal Care", "Snacks & Munchies"],
+        "avoid": ["Baby Care", "Pet Care"]
     }
 }
 
@@ -133,16 +145,7 @@ def score_candidate(product, profile, category_frequencies, cart_items, unexplor
         prefs = PERSONA_PREFERENCES[persona_type]
         if cat in prefs["preferred"]:
             score += 30
-            if persona_type == "Fitness Enthusiasts":
-                reasons.add("Matches your healthy lifestyle")
-            elif persona_type == "Students":
-                reasons.add("Matches your shopping style")
-            elif persona_type in ["Families", "Parents"]:
-                reasons.add("Relevant to your family needs")
-            elif persona_type == "Pet Owners":
-                reasons.add("Ideal for your pets")
-            else:
-                reasons.add("Fits your shopping routine")
+            reasons.add("Fits your preferred categories")
         elif cat in prefs["avoid"]:
             score -= 20
             
@@ -151,13 +154,13 @@ def score_candidate(product, profile, category_frequencies, cart_items, unexplor
         freq = category_frequencies[cat]
         if freq >= 3:
             score += 25
-            reasons.add("High affinity with your purchase history")
+            reasons.add("Matches your shopping habits")
         elif freq == 2:
             score += 15
-            reasons.add("Relevant to your lifestyle")
+            reasons.add("Complements your recent purchases")
         else:
             score += 5
-            reasons.add("Based on your recent purchases")
+            reasons.add("Matches your shopping habits")
             
     # 3. Current Cart Compatibility (+20)
     cart_match = False
@@ -171,22 +174,17 @@ def score_candidate(product, profile, category_frequencies, cart_items, unexplor
                 
     if cart_match:
         score += 20
-        reasons.add("Frequently bought with your favourite products")
-        reasons.add("Great complementary purchase")
+        reasons.add("Frequently bought together")
                 
     # 4. Cross-category Novelty (+10) -> Reduced from +15 so it doesn't overpower persona match
     if cat in unexplored_categories:
         score += 10
-        reasons.add("Introduces a new category")
+        reasons.add("Helps you discover a new category")
         
     # 5. Product Availability (+10) (simulated)
     score += 10
-    
-    # Map score to 70-95 range
-    final_score = 70 + int((score / 100.0) * 25)
-    final_score = max(70, min(95, final_score))
         
-    return final_score, list(reasons)
+    return score, list(reasons)
 
 
 def get_recommendation(user_id: str):
@@ -298,18 +296,16 @@ def get_recommendation(user_id: str):
     intent = "Cross-category Discovery"
 
     def get_fallback_explanation(persona_type, candidate_name, rec_category):
-        if persona_type == "Fitness Enthusiasts":
-            return f"Based on your healthy shopping habits, {candidate_name} is a great addition to your regular purchases while helping you explore a new category."
-        elif persona_type in ["Families", "Parents"]:
-            return f"Parents with similar shopping patterns often purchase {candidate_name} alongside their regular family essentials."
-        elif persona_type == "Working Professionals":
-            return f"This {candidate_name} complements your routine purchases and introduces something new without changing your usual shopping behaviour."
-        elif persona_type == "Students":
-            return f"This quick and affordable {candidate_name} matches your shopping style while encouraging category exploration."
-        elif persona_type == "Premium Shoppers":
-            return f"This premium recommendation aligns with your preferences while helping you discover another category."
+        if persona_type == "Fitness Enthusiast":
+            return f"Your shopping history reflects a preference for healthier choices. This product complements your routine while introducing a relevant new category."
+        elif persona_type in ["Family Shopper", "Parent"]:
+            return f"Your regular household purchases suggest this product would be a practical addition while expanding your shopping basket into a related category."
+        elif persona_type in ["Working Professional", "Premium Shopper"]:
+            return f"You frequently shop for daily essentials. This recommendation naturally complements your routine while encouraging category exploration."
+        elif persona_type == "Student":
+            return f"You often purchase snacks and quick meals. This product complements your usual orders while helping you discover a category you haven't explored before."
         else:
-            return f"Since you frequently shop with us, we think {candidate_name} from {rec_category} perfectly complements your order."
+            return f"This recommendation offers good value while helping you explore a category that's relevant to your shopping habits."
 
     if client:
         # LLM Logic - restricted ONLY to generating the explanation
@@ -328,15 +324,18 @@ def get_recommendation(user_id: str):
         SELECTED PRODUCT TO RECOMMEND:
         Name: {best_candidate.get('name')}
         Category: {rec_category}
+        Matched Reasons: {json.dumps(best_reasons)}
         
         Task:
-        Write a short, conversational explanation addressing the user directly (MAXIMUM 2 to 3 sentences) explaining WHY this specific product was recommended to them.
+        Write a short, conversational explanation addressing the user directly explaining WHY this specific product was recommended to them.
         
         CRITICAL RULES:
-        - Use a natural, conversational tone. Avoid generic, repetitive phrases like "We've found that..."
-        - Combine their Persona, Shopping behaviour, Cart items, and whether it helps them discover a new category into the explanation.
-        - Do NOT invent or hallucinate product features or use-cases.
-        - Keep it strictly to 2 to 3 sentences.
+        - Maximum 45 words.
+        - 2 to 3 natural sentences.
+        - Never repeat the product name more than once.
+        - Never begin with "Since you frequently shop with us..."
+        - Use a natural, conversational tone. Vary the wording.
+        - Base the explanation on the provided User Profile, Shopping Behaviour, and Matched Reasons. Do NOT invent product features.
         
         Output JSON format exactly:
         {{
@@ -364,20 +363,31 @@ def get_recommendation(user_id: str):
     if not explanation or not explanation.strip():
         explanation = get_fallback_explanation(persona_type, best_candidate.get('name'), rec_category)
         
-    while len(best_reasons) < 2:
-        if "Popular among similar shoppers" not in best_reasons:
-            best_reasons.append("Popular among similar shoppers")
-        else:
-            best_reasons.append("Fits your shopping routine")
-
-    best_score = max(70, min(95, best_score))
+    # Map raw score to deterministic confidence score ranges
+    if best_score >= 75:
+        # Outstanding recommendation -> 90-98%
+        confidence = 90 + int(((best_score - 75) / 20.0) * 8)
+        confidence = min(98, confidence)
+    elif best_score >= 60:
+        # Strong recommendation -> 82-89%
+        confidence = 82 + int(((best_score - 60) / 14.0) * 7)
+    elif best_score >= 45:
+        # Good recommendation -> 72-81%
+        confidence = 72 + int(((best_score - 45) / 14.0) * 9)
+    elif best_score >= 30:
+        # Moderate recommendation -> 62-71%
+        confidence = 62 + int(((best_score - 30) / 14.0) * 9)
+    else:
+        # Discovery-focused recommendation -> 55-61%
+        val = max(0, best_score)
+        confidence = 55 + int((val / 29.0) * 6)
 
     return {
         "intent": intent,
         "recommended_category": rec_category,
         "recommended_product": best_candidate,
         "explanation": explanation,
-        "confidence_score": best_score,
+        "confidence_score": confidence,
         "matched_reasons": best_reasons,
         "is_new_category": rec_category in unexplored_categories
     }
