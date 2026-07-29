@@ -104,11 +104,35 @@ export default function Home() {
     return () => clearTimeout(timer)
   }, [])
 
+  const fetchUserPurchases = (userId: string) => {
+    fetch(`${API_BASE}/users/${userId}/purchases`)
+      .then(res => {
+        if (!res.ok) throw new Error(`Purchases API failed: ${res.status}`)
+        return res.json()
+      })
+      .then(data => setPurchases(Array.isArray(data) ? data : []))
+      .catch(err => {
+        console.error("fetchUserPurchases Error:", err)
+        setPurchases([])
+      })
+  }
+
+  const handleUserChange = (user: any) => {
+    setActiveUser(user)
+    setPurchases([])
+    setCategories([])
+    setFeatured([])
+    localStorage.setItem('blinkit_active_user', user.user_id)
+    window.dispatchEvent(new Event('personaChanged'))
+    fetchUserPurchases(user.user_id)
+    fetchPersonalizedContent(user.user_id)
+  }
+
   useEffect(() => {
     if (!showSplash) {
         
-      // Fetch users for Demo Mode
-      fetch(`${API_BASE}/users`)
+      // Fetch users for Demo Mode with cache buster
+      fetch(`${API_BASE}/users?_t=${Date.now()}`)
         .then(res => {
           if (!res.ok) throw new Error(`Users API failed: ${res.status}`)
           return res.json()
@@ -140,30 +164,6 @@ export default function Home() {
         })
     }
   }, [showSplash])
-
-  const fetchUserPurchases = (userId: string) => {
-    fetch(`${API_BASE}/users/${userId}/purchases`)
-      .then(res => {
-        if (!res.ok) throw new Error(`Purchases API failed: ${res.status}`)
-        return res.json()
-      })
-      .then(data => setPurchases(Array.isArray(data) ? data : []))
-      .catch(err => {
-        console.error("fetchUserPurchases Error:", err)
-        setPurchases([])
-      })
-  }
-
-  const handleUserChange = (user: any) => {
-    setActiveUser(user)
-    setPurchases([])
-    setCategories([])
-    setFeatured([])
-    localStorage.setItem('blinkit_active_user', user.user_id)
-    window.dispatchEvent(new Event('personaChanged'))
-    fetchUserPurchases(user.user_id)
-    fetchPersonalizedContent(user.user_id)
-  }
 
   if (showSplash) {
     return (
