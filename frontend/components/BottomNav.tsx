@@ -56,12 +56,12 @@ export default function BottomNav() {
         </div>
       )}
 
-      {showCartToast && (
+    {showCartToast && (
         <div className="fixed bottom-24 left-1/2 transform -translate-x-1/2 w-11/12 max-w-sm bg-gray-900 text-white text-xs p-3 rounded-lg shadow-xl z-50 animate-fade-in-up">
           <div className="flex items-start">
             <Info size={16} className="text-blue-400 mr-2 flex-shrink-0 mt-0.5" />
             <p>
-              Search is not implemented in this MVP. This prototype focuses on AI-powered Smart Discovery and personalized cross-category recommendations.
+              This option is not implemented in this MVP. This prototype focuses on AI-powered Smart Discovery and personalized cross-category recommendations.
             </p>
           </div>
         </div>
