@@ -13,7 +13,7 @@ export default function Navbar() {
       const savedUserId = localStorage.getItem('blinkit_active_user');
       if (savedUserId) {
         try {
-          const res = await fetch('http://localhost:8000/api/users');
+          const res = await fetch(`http://localhost:8000/api/users?_t=${Date.now()}`);
           const users = await res.json();
           const user = users.find((u: any) => u.user_id === savedUserId);
           if (user) {
