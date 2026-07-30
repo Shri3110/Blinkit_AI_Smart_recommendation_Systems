@@ -25,7 +25,7 @@ export default function CartPage() {
     const savedUserId = localStorage.getItem('blinkit_active_user')
     if (savedUserId) {
       setSelectedUserId(savedUserId)
-      fetch(`${API_BASE}/users`)
+      fetch(`${API_BASE}/users?_t=${Date.now()}`)
         .then(res => res.json())
         .then(data => {
           setUsers(data)
