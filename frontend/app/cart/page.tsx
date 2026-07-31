@@ -56,8 +56,23 @@ export default function CartPage() {
     setShowDiscovery(true)
   }
 
-  const completeCheckout = (acceptedRecommendation: boolean = false) => {
+  const completeCheckout = async (acceptedRecommendation: boolean = false, productId?: string) => {
     setShowDiscovery(false)
+    
+    if (acceptedRecommendation && productId && selectedUserId) {
+      try {
+        await fetch(`${API_BASE}/cart/${selectedUserId}/add`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ product_id: productId, quantity: 1 }),
+        });
+      } catch (err) {
+        console.error("Failed to add recommendation to cart", err);
+      }
+    }
+    
     router.push(`/success?addedRec=${acceptedRecommendation}`)
   }
 
@@ -249,7 +264,7 @@ export default function CartPage() {
           userId={selectedUserId}
           activeUser={activeUser}
           onSkip={(payload) => completeCheckout(false)}
-          onAccept={(payload) => completeCheckout(true)}
+          onAccept={(payload: any) => completeCheckout(true, payload?.product_id)}
         />
       )}
     </div>

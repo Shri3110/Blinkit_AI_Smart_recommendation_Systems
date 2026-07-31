@@ -73,7 +73,7 @@ export default function SmartDiscoveryModal({ userId, activeUser, onSkip, onAcce
         user_exploration_score: activeUser.exploration_score || 0
       }))
     }
-    onAccept()
+    onAccept({ product_id: recommendation?.recommended_product?.id })
   }
 
   if (error) return null

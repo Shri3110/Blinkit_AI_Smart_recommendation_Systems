@@ -176,9 +176,9 @@ def score_candidate(product, profile, category_frequencies, cart_items, unexplor
         score += 20
         reasons.add("Frequently bought together")
                 
-    # 4. Cross-category Novelty (+10) -> Reduced from +15 so it doesn't overpower persona match
+    # 4. Cross-category Novelty (+50) -> Boosted to guarantee new category recommendations
     if cat in unexplored_categories:
-        score += 10
+        score += 50
         reasons.add("Helps you discover a new category")
         
     # 5. Product Availability (+10) (simulated)
@@ -345,7 +345,7 @@ def get_recommendation(user_id: str):
         
         try:
             response = client.chat.completions.create(
-                model="llama-3.1-8b-instant",
+                model="llama-3.3-70b-versatile",
                 messages=[{"role": "user", "content": prompt}],
                 response_format={"type": "json_object"}
             )

@@ -181,19 +181,6 @@ async def recommend(user_id: str):
 
 
 
-def get_dynamic_favourite_categories(user_id: str):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT category FROM purchases WHERE user_id = ?", (user_id,))
-    purchases = cursor.fetchall()
-    conn.close()
-    if not purchases:
-        return []
-    from collections import Counter
-    cat_counts = Counter([p["category"] for p in purchases])
-    return [cat for cat, count in cat_counts.most_common(3)]
-
-
 @app.get("/api/categories")
 async def get_categories(user_id: str = None):
     conn = get_db_connection()
@@ -201,12 +188,16 @@ async def get_categories(user_id: str = None):
     cursor.execute("SELECT DISTINCT category FROM products ORDER BY category")
     rows = cursor.fetchall()
     categories = [row["category"] for row in rows]
-    conn.close()
     
     if user_id:
-        fav_cats = get_dynamic_favourite_categories(user_id)
-        categories = [c for c in fav_cats if c in categories] + [c for c in categories if c not in fav_cats]
+        cursor.execute("SELECT raw_json FROM users WHERE user_id = ?", (user_id,))
+        user_row = cursor.fetchone()
+        if user_row:
+            user_data = json.loads(user_row["raw_json"])
+            fav_cats = user_data.get("favourite_categories", [])
+            categories = [c for c in fav_cats if c in categories] + [c for c in categories if c not in fav_cats]
             
+    conn.close()
     return categories
 
 @app.get("/api/products/featured")
@@ -216,7 +207,11 @@ async def get_featured_products(user_id: str = None):
     
     fav_cats = []
     if user_id:
-        fav_cats = get_dynamic_favourite_categories(user_id)
+        cursor.execute("SELECT raw_json FROM users WHERE user_id = ?", (user_id,))
+        user_row = cursor.fetchone()
+        if user_row:
+            user_data = json.loads(user_row["raw_json"])
+            fav_cats = user_data.get("favourite_categories", [])
             
     if fav_cats:
         placeholders = ','.join(['?'] * len(fav_cats))
