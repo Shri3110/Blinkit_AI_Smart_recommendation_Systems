@@ -8,7 +8,6 @@ import { Info } from 'lucide-react'
 
 export default function BottomNav() {
   const pathname = usePathname()
-  const [showSearchToast, setShowSearchToast] = useState(false)
   const [showCartToast, setShowCartToast] = useState(false)
 
   // Hide the global bottom nav on the cart and success pages so it doesn't overlap the checkout bar
@@ -28,13 +27,21 @@ export default function BottomNav() {
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={pathname === '/' ? "2.5" : "2"} strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         <span className={`text-[10px] mt-1 ${pathname === '/' ? 'font-bold' : 'font-medium'}`}>Home</span>
       </Link>
-      <button 
-        onClick={() => handleNotImplemented(setShowSearchToast)}
-        className="flex flex-col items-center text-gray-400 cursor-not-allowed transition hover:text-gray-600 focus:outline-none"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-        <span className="text-[10px] mt-1 font-medium">Search</span>
-      </button>
+      <div className="relative flex flex-col items-center group cursor-help">
+        <button 
+          disabled
+          className="flex flex-col items-center text-gray-400 cursor-not-allowed transition focus:outline-none"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <div className="flex items-center gap-0.5 mt-1">
+            <span className="text-[10px] font-medium">Search</span>
+            <Info size={10} className="text-gray-400 group-hover:text-blue-500" />
+          </div>
+        </button>
+        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 bg-gray-900 text-white text-[10px] rounded shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+          Search is intentionally disabled in this MVP to evaluate the impact of AI-driven contextual recommendations without introducing manual exploration.
+        </div>
+      </div>
       <button 
         onClick={() => handleNotImplemented(setShowCartToast)}
         className={`flex flex-col items-center transition ${pathname === '/cart' ? 'text-green-600' : 'text-gray-400 hover:text-gray-600 focus:outline-none'}`}
@@ -44,17 +51,6 @@ export default function BottomNav() {
       </button>
 
       </div>
-
-      {showSearchToast && (
-        <div className="fixed bottom-24 left-1/2 transform -translate-x-1/2 w-11/12 max-w-sm bg-gray-900 text-white text-xs p-3 rounded-lg shadow-xl z-50 animate-fade-in-up">
-          <div className="flex items-start">
-            <Info size={16} className="text-blue-400 mr-2 flex-shrink-0 mt-0.5" />
-            <p>
-              Search is not implemented in this MVP. This prototype focuses on AI-powered Smart Discovery and personalized cross-category recommendations.
-            </p>
-          </div>
-        </div>
-      )}
 
     {showCartToast && (
         <div className="fixed bottom-24 left-1/2 transform -translate-x-1/2 w-11/12 max-w-sm bg-gray-900 text-white text-xs p-3 rounded-lg shadow-xl z-50 animate-fade-in-up">

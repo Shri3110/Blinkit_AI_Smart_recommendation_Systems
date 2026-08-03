@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Sparkles, X, Plus } from 'lucide-react'
+import { Sparkles, X, Plus, Search, Info } from 'lucide-react'
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'
 
@@ -108,6 +108,25 @@ export default function SmartDiscoveryModal({ userId, activeUser, onSkip, onAcce
             
             {/* Content */}
             <div className="p-5 overflow-y-auto flex-1">
+              {/* Disabled Search Bar */}
+              <div className="relative group mb-5">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Search size={16} className="text-gray-400" />
+                </div>
+                <input 
+                  type="text" 
+                  disabled
+                  className="block w-full pl-10 pr-10 py-2.5 border border-gray-200 rounded-xl leading-5 bg-gray-50 placeholder-gray-400 focus:outline-none cursor-not-allowed sm:text-sm transition-all shadow-inner text-gray-400" 
+                  placeholder="Search groceries & essentials" 
+                />
+                <div className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-help">
+                  <Info size={16} className="text-gray-400 group-hover:text-blue-500 transition-colors" />
+                </div>
+                <div className="absolute top-full left-0 mt-2 w-full p-2 bg-gray-900 text-white text-[10px] rounded shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+                  Search is intentionally disabled in this MVP to evaluate the impact of AI-driven contextual recommendations without introducing manual exploration.
+                </div>
+              </div>
+
               <div className="flex space-x-4 mb-4">
                 <div className="w-24 h-24 bg-gray-50 rounded-xl border border-gray-100 flex-shrink-0 flex items-center justify-center overflow-hidden relative shadow-sm">
                   <img src={recommendation.recommended_product.image_url} alt={recommendation.recommended_product.name} className="w-full h-full object-cover" />

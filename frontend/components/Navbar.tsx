@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 
 export default function Navbar() {
   const [activePersona, setActivePersona] = useState<any>(null)
-  const [showSearchToast, setShowSearchToast] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -65,33 +64,24 @@ export default function Navbar() {
         )}
       </div>
       <div className="px-4 pb-3">
-        <div className="relative">
+        <div className="relative group">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <Search size={16} className="text-gray-400" />
           </div>
           <input 
             type="text" 
-            readOnly
-            onClick={() => {
-              setShowSearchToast(true)
-              setTimeout(() => setShowSearchToast(false), 4000)
-            }}
-            className="block w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-xl leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none cursor-pointer sm:text-sm transition-all shadow-inner" 
+            disabled
+            className="block w-full pl-10 pr-10 py-2.5 border border-gray-200 rounded-xl leading-5 bg-gray-50 placeholder-gray-400 focus:outline-none cursor-not-allowed sm:text-sm transition-all shadow-inner text-gray-400" 
             placeholder="Search groceries & essentials" 
           />
-        </div>
-      </div>
-      
-      {showSearchToast && (
-        <div className="fixed top-24 left-1/2 transform -translate-x-1/2 w-11/12 max-w-sm bg-gray-900 text-white text-xs p-3 rounded-lg shadow-xl z-50 animate-fade-in-up">
-          <div className="flex items-start">
-            <Info size={16} className="text-blue-400 mr-2 flex-shrink-0 mt-0.5" />
-            <p>
-              Search is not implemented in this MVP. This prototype focuses on AI-powered Smart Discovery and personalized cross-category recommendations.
-            </p>
+          <div className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-help">
+            <Info size={16} className="text-gray-400 group-hover:text-blue-500 transition-colors" />
+          </div>
+          <div className="absolute top-full right-4 mt-2 w-64 p-2 bg-gray-900 text-white text-[10px] rounded shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+            Search is intentionally disabled in this MVP to evaluate the impact of AI-driven contextual recommendations without introducing manual exploration.
           </div>
         </div>
-      )}
+      </div>
     </header>
   )
 }
