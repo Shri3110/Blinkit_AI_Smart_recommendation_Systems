@@ -1,0 +1,141 @@
+This is the prompt I would give Antigravity. It is **very focused**—it doesn't ask it to redesign your system, only to improve the **quality and credibility** of the recommendations.
+
+---
+
+## Prompt
+
+My Recommendation Engine is working correctly from an architectural perspective. **Do not modify the backend architecture, deterministic scoring pipeline, APIs, database schema, candidate generation flow, or checkout integration.**
+
+I only want to improve the **quality, relevance, and credibility** of the recommendations and their explanations.
+
+### 1. Improve Recommendation Relevance
+
+The recommended product should feel like something the user would genuinely consider purchasing.
+
+When selecting the highest-scoring candidate, prioritize products that:
+
+* naturally complement the current cart,
+* align with the user's purchase history,
+* match the user's persona,
+* belong to an unexplored category,
+* are realistic cross-sell opportunities.
+
+Avoid recommendations that technically satisfy the scoring rules but feel random or weak.
+
+---
+
+### 2. Improve Explanation Quality
+
+The explanation should never sound generic.
+
+Avoid sentences such as:
+
+* "Helps you discover a new category."
+* "Fits your preferred categories."
+* "Naturally complements your routine."
+
+Instead, generate explanations that explicitly reference the deterministic scoring inputs.
+
+For example:
+
+* "You frequently purchase Ready-to-Eat meals and breakfast products."
+* "Your current cart already contains everyday grocery essentials."
+* "Snacks & Munchies is one of the few categories you haven't explored yet."
+* "This is an affordable first purchase that expands your shopping basket with minimal risk."
+
+The explanation must be grounded in the actual persona, cart, purchase history, and matched reasons passed from Python.
+
+Do not invent user behaviour.
+
+---
+
+### 3. Improve "Matched Because"
+
+Instead of generic reasons, display specific deterministic reasons such as:
+
+✓ Complements products already in your cart
+
+✓ Matches your Quality Seeker shopping behaviour
+
+✓ Expands into an unexplored category
+
+✓ Frequently purchased alongside similar products
+
+Only display reasons that are actually true for the recommendation.
+
+---
+
+### 4. Improve Match Percentage
+
+The current match percentages (95–99%) feel unrealistic.
+
+Instead:
+
+* derive the percentage from the normalized deterministic score,
+* use a wider distribution,
+* reserve 95%+ only for exceptionally strong matches.
+
+Typical ranges should look like:
+
+* 65–75% → Moderate match
+* 76–85% → Strong match
+* 86–94% → Excellent match
+* 95%+ → Rare, near-perfect match
+
+Do not generate arbitrary percentages.
+
+---
+
+### 5. Improve Candidate Selection
+
+If multiple products receive similar scores, prefer the product that:
+
+1. Best complements the current cart.
+2. Feels like a natural cross-sell.
+3. Requires the least behavioural leap for the user.
+4. Represents a realistic Blinkit recommendation.
+
+The recommendation should feel intentional rather than random.
+
+---
+
+### 6. Ensure Internal Consistency
+
+The following must always agree:
+
+* Persona
+* Purchase History
+* Current Cart
+* Recommendation
+* Matched Reasons
+* LLM Explanation
+* Match Percentage
+
+There should never be contradictions such as recommending a Snacks product while claiming it matches only Breakfast preferences.
+
+---
+
+### 7. Preserve Existing Architecture
+
+Do **not** modify:
+
+* backend APIs,
+* deterministic scoring logic,
+* RAG,
+* Pinecone,
+* database,
+* scheduler,
+* checkout flow,
+* modal UI.
+
+Only improve the recommendation quality, explanation quality, and presentation while keeping the existing architecture intact.
+
+---
+
+This prompt focuses on the three areas that will have the biggest impact in a demo:
+
+1. **Better recommendations**
+2. **More believable explanations**
+3. **More credible match scores**
+
+Those changes will make your recommendation system feel much more like something a production e-commerce platform would use.

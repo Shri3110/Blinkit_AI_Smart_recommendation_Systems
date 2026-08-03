@@ -55,9 +55,11 @@ export default function Home() {
   const [showInfo, setShowInfo] = useState(false)
   const [loadingContent, setLoadingContent] = useState(true)
   const [showCatalogueToast, setShowCatalogueToast] = useState(false)
+  const [apiError, setApiError] = useState<string | null>(null)
 
   const fetchPersonalizedContent = async (userId: string) => {
     setLoadingContent(true)
+    setApiError(null)
     try {
       const [catRes, featRes] = await Promise.all([
         fetch(`${API_BASE}/categories?user_id=${userId}`),
@@ -72,8 +74,9 @@ export default function Home() {
       
       setCategories(Array.isArray(cats) ? cats : [])
       setFeatured(Array.isArray(feats) ? feats : [])
-    } catch (err) {
+    } catch (err: any) {
       console.error("fetchPersonalizedContent Error:", err)
+      setApiError(`Failed to fetch from ${API_BASE}. Error: ${err.message}`)
       setCategories([])
       setFeatured([])
     } finally {
@@ -160,6 +163,7 @@ export default function Home() {
         })
         .catch(err => {
           console.error("Failed to fetch API:", err)
+          setApiError(`Failed to fetch users from ${API_BASE}. Error: ${err.message}`)
           setLoadingContent(false)
         })
     }
@@ -179,6 +183,21 @@ export default function Home() {
   return (
     <div className="p-4 pt-20 pb-24 space-y-6">
       
+      {apiError && (
+        <div className="bg-red-50 border border-red-200 rounded-xl p-4 shadow-sm relative z-10 text-red-700 text-xs font-semibold">
+          <div className="flex items-start gap-2">
+            <Info size={16} className="text-red-500 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="font-extrabold text-sm mb-1">API Connection Error</p>
+              <p>{apiError}</p>
+              <p className="mt-2 text-red-500 font-medium font-mono text-[10px] bg-red-100 p-1.5 rounded">
+                Ensure NEXT_PUBLIC_API_URL is set in Vercel to your deployed backend.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* AI Demo Mode Card */}
       {activeUser && (
         <section className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-4 border border-green-100 shadow-sm relative overflow-hidden">

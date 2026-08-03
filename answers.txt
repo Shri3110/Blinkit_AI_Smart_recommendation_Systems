@@ -1,0 +1,27 @@
+
+---
+
+## Part 2: Recommendation System Architecture (c:\Blinkit MVP)
+
+Based strictly on your implementation in `ai_service.py` and `main.py`, here is how the recommendation engine works:
+
+*   **Input:** The engine takes a `user_id`. It then queries SQLite for the user's Profile (age, occupation), their current Cart items (`get_cart`), and their Purchase History to determine frequent categories (`category_frequencies`).
+*   **Candidate generation:** The engine identifies "unexplored categories" by filtering out the user's frequent categories. It then pools up to 50 product candidates from SQLite (`SELECT raw_json FROM products WHERE category IN (...)`) by combining the user's persona preferences with the top unexplored categories.
+*   **Recommendation algorithm:** The 50 candidates are scored using a 5-factor heuristic algorithm: 
+    1. Persona Match (+30 / -20)
+    2. Purchase History Relevance (+5 to +25)
+    3. Cart Compatibility based on a hardcoded affinity map (+20)
+    4. Cross-category Novelty (+50)
+    5. Product Availability (+10).
+    The system then filters out recently recommended items (`SESSION_HISTORY`) and randomly selects one item from the top candidates that are within 5 points of the highest score.
+*   **AI's role:** The AI is used strictly for Natural Language Generation (NLG). It translates the deterministic recommendation into a conversational, personalized explanation.
+*   **Deterministic logic:** *ALL* decision-making is deterministic. Candidate pooling, scoring, category prioritization, and confidence score calculation (which uses a deterministic jitter based on user/product IDs) are entirely rule-based Python logic. 
+*   **LLM's responsibility:** The LLM (Llama 3.3 70B via Groq) is only responsible for reading the profile, cart, and the deterministic `matched_reasons` list, and outputting exactly a 45-word (2-3 sentences) JSON explanation of *why* the product was recommended.
+*   **Database:** A local SQLite database (`discovery_engine.db`) containing `users`, `products`, `purchases`, and `carts` tables.
+*   **API flow:** A FastAPI backend exposes a `POST /api/recommend/{user_id}` endpoint. The endpoint executes the synchronous pipeline, queries the DB, runs the scoring math, calls Groq via HTTP, and returns the structured JSON.
+*   **Frontend flow:** The Next.js frontend (`CartPage`) triggers the recommendation API when the user clicks "Proceed to Pay". It displays the result in `SmartDiscoveryModal.tsx`. If the user accepts, the frontend POSTs to `/api/cart/{user_id}/add` to add the item and then routes to `/success?addedRec=true` (bypassing actual payment logic). If the API fails or times out, it fails gracefully and allows the user to skip.
+
+### Clarification: Rule-based vs. AI-generated Decisions
+To be absolutely clear, here is the exact separation of responsibilities:
+- **Rule-based (Deterministic):** Identifying candidate products, running the 5-factor scoring algorithm (persona, purchase history, cart affinity, novelty, availability), selecting the final product to recommend, and calculating the confidence percentage.
+- **AI-generated (LLM):** Taking the deterministically chosen product and writing the 2-3 sentence personalized justification/explanation that the user reads. The AI makes ZERO decisions about *what* to recommend; it only explains *why* the deterministic engine chose it.

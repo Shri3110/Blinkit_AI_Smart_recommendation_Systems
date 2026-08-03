@@ -141,11 +141,15 @@ def score_candidate(product, profile, category_frequencies, cart_items, unexplor
     
     # 1. Persona Match (+30)
     persona_type = profile.get('occupation', '')
+    shopping_behaviour = profile.get('shopping_behaviour', '')
     if persona_type in PERSONA_PREFERENCES:
         prefs = PERSONA_PREFERENCES[persona_type]
         if cat in prefs["preferred"]:
             score += 30
-            reasons.add("Fits your preferred categories")
+            if shopping_behaviour and shopping_behaviour != "Unknown":
+                reasons.add(f"Matches your {shopping_behaviour} shopping behaviour")
+            else:
+                reasons.add(f"Aligns with your {persona_type} persona")
         elif cat in prefs["avoid"]:
             score -= 20
             
@@ -154,13 +158,13 @@ def score_candidate(product, profile, category_frequencies, cart_items, unexplor
         freq = category_frequencies[cat]
         if freq >= 3:
             score += 25
-            reasons.add("Matches your shopping habits")
+            reasons.add("Consistently matches your purchase history")
         elif freq == 2:
             score += 15
             reasons.add("Complements your recent purchases")
         else:
             score += 5
-            reasons.add("Matches your shopping habits")
+            reasons.add("Matches your previous shopping habits")
             
     # 3. Current Cart Compatibility (+20)
     cart_match = False
@@ -174,12 +178,12 @@ def score_candidate(product, profile, category_frequencies, cart_items, unexplor
                 
     if cart_match:
         score += 20
-        reasons.add("Frequently bought together")
+        reasons.add("Complements products already in your cart")
                 
     # 4. Cross-category Novelty (+50) -> Boosted to guarantee new category recommendations
     if cat in unexplored_categories:
         score += 50
-        reasons.add("Helps you discover a new category")
+        reasons.add("Expands into an unexplored category")
         
     # 5. Product Availability (+10) (simulated)
     score += 10
@@ -281,7 +285,15 @@ def get_recommendation(user_id: str):
         # Find candidates within 5 points of the highest available score in the top 3
         close_candidates = [c for c in unseen_top_3 if (highest_score - c[0]) <= 5]
         
-        selected = random.choice(close_candidates)
+        # Tie-breaker: Prefer products that complement the cart, representing a realistic cross-sell
+        def sort_tiebreaker(c):
+            score = c[0]
+            cart_match = 1 if "Complements products already in your cart" in c[2] else 0
+            return (score, cart_match)
+            
+        close_candidates.sort(key=sort_tiebreaker, reverse=True)
+        
+        selected = close_candidates[0]
         best_score, best_candidate, best_reasons = selected
         
         if user_id not in SESSION_HISTORY:
@@ -330,12 +342,12 @@ def get_recommendation(user_id: str):
         Write a short, conversational explanation addressing the user directly explaining WHY this specific product was recommended to them.
         
         CRITICAL RULES:
-        - Maximum 45 words.
-        - 2 to 3 natural sentences.
-        - Never repeat the product name more than once.
-        - Never begin with "Since you frequently shop with us..."
-        - Use a natural, conversational tone. Vary the wording.
-        - Base the explanation on the provided User Profile, Shopping Behaviour, and Matched Reasons. Do NOT invent product features.
+        1. Explicitly reference their specific persona (e.g., {persona_type}), purchase history, current cart items, or that this is an unexplored category.
+        2. Never use generic sentences like "Helps you discover a new category", "Fits your preferred categories", or "Naturally complements your routine."
+        3. Do NOT invent user behaviour. Use only the provided cart, history, and matched reasons.
+        4. Maximum 45 words (2 to 3 natural sentences).
+        5. Never repeat the product name more than once.
+        6. Base the explanation purely on the deterministic scoring inputs (User Profile, Shopping Behaviour, and Matched Reasons).
         
         Output JSON format exactly:
         {{
@@ -363,24 +375,21 @@ def get_recommendation(user_id: str):
     if not explanation or not explanation.strip():
         explanation = get_fallback_explanation(persona_type, best_candidate.get('name'), rec_category)
         
-    # Map raw score to deterministic confidence score ranges
-    if best_score >= 75:
-        # Outstanding recommendation -> 90-98%
-        confidence = 90 + int(((best_score - 75) / 20.0) * 8)
-        confidence = min(98, confidence)
+    # Map raw score to deterministic confidence score ranges based on new specifications
+    if best_score >= 105:
+        # Rare, near-perfect match -> 95%+
+        confidence = 95 + int(((best_score - 105) / 30.0) * 4)
+        confidence = min(99, confidence)
+    elif best_score >= 80:
+        # Excellent match -> 86-94%
+        confidence = 86 + int(((best_score - 80) / 25.0) * 8)
     elif best_score >= 60:
-        # Strong recommendation -> 82-89%
-        confidence = 82 + int(((best_score - 60) / 14.0) * 7)
-    elif best_score >= 45:
-        # Good recommendation -> 72-81%
-        confidence = 72 + int(((best_score - 45) / 14.0) * 9)
-    elif best_score >= 30:
-        # Moderate recommendation -> 62-71%
-        confidence = 62 + int(((best_score - 30) / 14.0) * 9)
+        # Strong match -> 76-85%
+        confidence = 76 + int(((best_score - 60) / 20.0) * 9)
     else:
-        # Discovery-focused recommendation -> 55-61%
+        # Moderate match -> 65-75%
         val = max(0, best_score)
-        confidence = 55 + int((val / 29.0) * 6)
+        confidence = 65 + int((val / 60.0) * 10)
 
     # Add 0-4 points of deterministic variance based on the user and product IDs 
     # so the score doesn't appear artificially static (like always exactly 75%)

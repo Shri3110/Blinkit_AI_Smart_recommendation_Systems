@@ -1,0 +1,17 @@
+
+
+Explain the complete recommendation system architecture.
+
+Include:
+
+- Input
+- Candidate generation
+- Recommendation algorithm
+- AI's role
+- Deterministic logic
+- LLM's responsibility
+- Database
+- API flow
+- Frontend flow
+
+Clarify exactly which decisions are rule-based and which are AI-generated.
