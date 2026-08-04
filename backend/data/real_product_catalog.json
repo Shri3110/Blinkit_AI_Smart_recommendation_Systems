@@ -1296,22 +1296,6 @@
         "product_url": "https://blinkit.com/"
     },
     {
-        "product_id": "P_1081",
-        "name": "Amul Milk",
-        "brand": "Amul",
-        "category": "Breakfast & Instant Food",
-        "subcategory": "Dairy",
-        "variant": "Full Cream",
-        "size": "1 L",
-        "unit": "L",
-        "mrp": 55,
-        "selling_price": 50,
-        "discount_percentage": 9.09,
-        "availability": "In Stock",
-        "image_url": "https://cdn.grofers.com/app/images/products/full_screen/pro_placeholder.jpg",
-        "product_url": "https://blinkit.com/"
-    },
-    {
         "product_id": "P_1082",
         "name": "Haldiram's Namkeen",
         "brand": "Haldiram's",
